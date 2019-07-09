@@ -1,0 +1,24 @@
+server:
+  port: 8476
+  servlet:
+    context-path: /platform
+
+spring:
+  application:
+    name: platform-service
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/platform-service?useSSL=false&useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=UTC
+    username: root
+    password: Abcd1234
+mybatis:
+  mapper-locations: classpath:mapper/**/*Mapper.xml
+swagger:
+  version: 1.0
+  enabled: true
+  title: 问卷调查 服务
+  description: 使用 Swagger2 构建 RESTful API 文档
+  contact:
+    name: haopeisong
+    email: fpky_0729@126.com
+  base-package: org.zongzi.questionnaire.web

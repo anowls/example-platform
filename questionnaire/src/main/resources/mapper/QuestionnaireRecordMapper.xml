@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zongzi.questionnaire.mapper.QuestionnaireRecordMapper">
+
+    <sql id="baseSql">
+        select
+        eqr.ID as id,
+        eqr.QN_ID as qnId,
+        eqr.OPERATOR_ID as operatorId,
+        eqr.OPERATE_TIME as operateTime
+        from EX_QN_RECORD eqr
+    </sql>
+
+    <delete id="deleteByQnId">
+        delete from EX_QN_RECORD where QN_ID = #{qnId}
+    </delete>
+</mapper>

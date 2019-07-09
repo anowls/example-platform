@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zongzi.questionnaire.mapper.QuestionnaireMapper">
+    <sql id="baseSql">
+        select
+        eqn.ID as id,
+        eqn.QN_TITLE as title,
+        eqn.QN_DESCRIPTION as description,
+        eqn.QN_TYPE as type,
+        eqn.QN_STATUS as status,
+        eqn.QN_START_TIME as startTime,
+        eqn.QN_END_TIME as endTime,
+        eqn.QN_BUSINESS_ID as businessId,
+        case when eqr.ID is null then 0 else 1 end as isAnswer,
+        eqr.OPERATE_TIME as operateTime,
+        eqr.ID as questionRecordId
+        from EX_QUESTIONNAIRE eqn
+        left join EX_QN_RECORD eqr on eqn.ID = eqr.QN_ID
+        where eqn.deleted = 0
+    </sql>
+    <resultMap id="questionnaireMap" type="org.zongzi.questionnaire.domain.Questionnaire">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="startTime" column="startTime"/>
+        <result property="endTime" column="endTime"/>
+        <result property="businessId" column="businessId"/>
+        <association property="extraMap" javaType="java.util.Map">
+            <result property="isAnswer" column="isAnswer"/>
+            <result property="operateTime" column="operateTime"/>
+            <result property="questionRecordId" column="questionRecordId"/>
+        </association>
+    </resultMap>
+    <select id="findAll" resultMap="questionnaireMap">
+        <include refid="baseSql"/>
+        <if test="id != null and id != ''">
+            and eqn.ID = #{id}
+        </if>
+        <if test="creatorId != null and creatorId != ''">
+            and eqn.CREATOR_ID = #{creatorId}
+        </if>
+        <if test="keywords != null and keywords != ''">
+            and (eqn.QN_TITLE like '%keywords%' or eqn.QN_DESCRIPTION like '%keywords%')
+        </if>
+        <if test="businessId != null and businessId != ''">
+            and eqn.QN_BUSINESS_ID = #{userId}
+        </if>
+        <if test="operatorId != null and operatorId != ''">
+            and eqr.OPERATOR_ID = #{operatorId}
+        </if>
+        <if test="status != null and status.size() > 0">
+            and eqr.QN_STATUS in (
+            <foreach collection="status" item="item" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        order by eqn.QN_START_TIME, eqn.QN_END_TIME desc
+    </select>
+</mapper>

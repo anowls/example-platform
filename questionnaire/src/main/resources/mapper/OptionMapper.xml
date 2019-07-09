@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.zongzi.questionnaire.mapper.OptionMapper">
+
+    <sql id="baseSql">
+        select
+        eo.ID as id,
+        eo.QT_ID as qtId,
+        eo.OP_TITLE as title,
+        eo.OP_SEQUENCE as sequence
+        from EX_OPTION eo
+    </sql>
+    <select id="selectByQtId" resultType="org.zongzi.questionnaire.domain.Option">
+        <include refid="baseSql"/>
+        where eo.QT_ID = #{qtId}
+        order by eo.OP_SEQUENCE ASC
+    </select>
+    <delete id="deleteByQtId">
+        delete from EX_OPTION where QT_ID in (
+        <foreach collection="qtIdSet" item="item" separator=",">
+            #{item}
+        </foreach>
+        )
+    </delete>
+</mapper>

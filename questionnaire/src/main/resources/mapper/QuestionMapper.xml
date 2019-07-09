@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.zongzi.questionnaire.mapper.QuestionMapper">
+
+    <sql id="baseSql">
+        select
+        eq.ID as id,
+        eq.QN_ID as qnId,
+        eq.QT_TITLE as title,
+        eq.QT_DESCRIPTION as `description`,
+        eq.QT_SEQUENCE as sequence,
+        eq.QT_REQUIRED as required,
+        eq.QT_MIN_VALUE as minValue,
+        eq.QT_MAX_VALUE as `maxValue`,
+        eq.QT_TYPE as `type`,
+        eq.QT_DEFAULT_VALUE as defaultValue,
+        eq.QT_MIN_DESC as minDesc,
+        eq.QT_MAX_DESC as maxDesc
+        from EX_QUESTION eq
+    </sql>
+
+    <select id="selectByQnId" resultType="org.zongzi.questionnaire.domain.Question">
+        <include refid="baseSql"/>
+        where eq.QN_ID = #{qnId}
+        order by eq.QT_SEQUENCE ASC
+    </select>
+
+    <delete id="deleteByQnId">
+        delete from EX_QUESTION where QN_ID = #{qnId}
+    </delete>
+</mapper>
